@@ -961,39 +961,14 @@
             const ticketTypes = document.querySelectorAll('.ticket-type');
             const ticketTypeInput = document.getElementById('ticketType');
             const ticketPriceInput = document.getElementById('ticketPrice');
-            const totalPriceElement = document.getElementById('totalPrice');
             const visitorsInput = document.getElementById('visitors');
             const ticketForm = document.getElementById('ticketForm');
             const successMessage = document.getElementById('successMessage');
 
-            // Выбор типа билета
-            ticketTypes.forEach(type => {
-                type.addEventListener('click', function() {
-                    ticketTypes.forEach(t => t.classList.remove('selected'));
-                    this.classList.add('selected');
-                    
-                    const ticketType = this.getAttribute('data-type');
-                    const ticketPrice = this.getAttribute('data-price');
-                    
-                    ticketTypeInput.value = ticketType;
-                    ticketPriceInput.value = ticketPrice;
-                    
-                    calculateTotal();
-                });
-            });
-
-            visitorsInput.addEventListener('change', calculateTotal);
 
             // Обработка формы
             ticketForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                // Проверка выбранного типа билета
-                if (!ticketTypeInput.value) {
-                    alert('Пожалуйста, выберите тип билета');
-                    return;
-                }
-                
                 // Сохраняем данные формы
                 const formData = {
                     name: document.getElementById('fullName').value,
