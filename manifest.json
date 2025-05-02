@@ -1,7 +1,7 @@
 {
     "name": "Мир животных",
-    "short_name": "Животные",
-    "start_url": "/",
+    "short_name": "ZOO",
+    "start_url": "index.html",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#009688",
@@ -10,26 +10,8 @@
         "src": "/icon.png",
         "type": "image/png",
         "sizes": "193x194"
-      },
-      {
-        "src": "/icon2.png",
-        "type": "image/png",
-        "sizes": "512x512"
       }
     ],
-    "screenshots": [
-        {
-            "src": "/image.png",
-            "sizes": "1889x873",
-            "type": "image/png",
-            "form_factor": "wide"
-        },
-        {
-            "src": "/image2.png",
-            "sizes": "352x725",
-            "type": "image/png",
-            "form_factor": "wide"
-        }
-    ]
+    "scope":"/"
   }
   
