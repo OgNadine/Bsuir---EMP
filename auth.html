@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация и авторизация</title>
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+        }
+
+        .welcome-section {
+            flex: 1;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .welcome-section h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .welcome-section p {
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .form-container {
+            width: 100%;
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #6e8efb;
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        .toggle-form a {
+            color: #6e8efb;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #2ecc71;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .welcome-section {
+                padding: 30px 20px;
+            }
+
+            .form-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-section">
+            <h2>Добро пожаловать!</h2>
+            <p>Присоединяйтесь к нашему сообществу и получите доступ к эксклюзивному контенту.</p>
+            <p id="welcome-message">Войдите в свой аккаунт или зарегистрируйтесь, если вы здесь впервые.</p>
+        </div>
+        <div class="form-section">
+            <div class="form-container" id="loginForm">
+                <h2 class="form-title">Вход</h2>
+                <form id="loginFormElement">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                        <div class="error-message" id="login-email-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Пароль</label>
+                        <input type="password" id="login-password" required>
+                        <div class="error-message" id="login-password-error"></div>
+                    </div>
+                    <button type="submit" class="btn">Войти</button>
+                </form>
+                <div class="success-message" id="login-success"></div>
+                <div class="toggle-form">
+                    Нет аккаунта? <a id="showRegister">Зарегистрироваться</a>
+                </div>
+            </div>
+
+            <div class="form-container" id="registerForm" style="display: none;">
+                <h2 class="form-title">Регистрация</h2>
+                <form id="registerFormElement">
+                    <div class="form-group">
+                        <label for="register-name">Имя</label>
+                        <input type="text" id="register-name" required>
+                        <div class="error-message" id="register-name-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required>
+                        <div class="error-message" id="register-email-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Пароль</label>
+                        <input type="password" id="register-password" required>
+                        <div class="error-message" id="register-password-error"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-confirm-password">Подтвердите пароль</label>
+                        <input type="password" id="register-confirm-password" required>
+                        <div class="error-message" id="register-confirm-password-error"></div>
+                    </div>
+                    <button type="submit" class="btn">Зарегистрироваться</button>
+                </form>
+                <div class="success-message" id="register-success"></div>
+                <div class="toggle-form">
+                    Уже есть аккаунт? <a id="showLogin">Войти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Элементы DOM
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const showRegister = document.getElementById('showRegister');
+            const showLogin = document.getElementById('showLogin');
+            const welcomeMessage = document.getElementById('welcome-message');
+            const loginFormElement = document.getElementById('loginFormElement');
+            const registerFormElement = document.getElementById('registerFormElement');
+
+            // Переключение между формами
+            showRegister.addEventListener('click', function() {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                welcomeMessage.textContent = 'Создайте новый аккаунт, чтобы получить доступ ко всем возможностям.';
+            });
+
+            showLogin.addEventListener('click', function() {
+                registerForm.style.display = 'none';
+                loginForm.style.display = 'block';
+                welcomeMessage.textContent = 'Войдите в свой аккаунт или зарегистрируйтесь, если вы здесь впервые.';
+            });
+
+            // Проверка, есть ли зарегистрированные пользователи
+            if (!localStorage.getItem('users')) {
+                localStorage.setItem('users', JSON.stringify([]));
+            }
+
+            // Обработка регистрации
+            registerFormElement.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Сброс сообщений об ошибках
+                resetErrorMessages('register');
+                
+                // Получение значений полей
+                const name = document.getElementById('register-name').value.trim();
+                const email = document.getElementById('register-email').value.trim();
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm-password').value;
+                
+                // Валидация
+                let isValid = true;
+                
+                if (name.length < 2) {
+                    showError('register-name-error', 'Имя должно содержать минимум 2 символа');
+                    isValid = false;
+                }
+                
+                if (!validateEmail(email)) {
+                    showError('register-email-error', 'Введите корректный email');
+                    isValid = false;
+                }
+                
+                if (password.length < 6) {
+                    showError('register-password-error', 'Пароль должен содержать минимум 6 символов');
+                    isValid = false;
+                }
+                
+                if (password !== confirmPassword) {
+                    showError('register-confirm-password-error', 'Пароли не совпадают');
+                    isValid = false;
+                }
+                
+                // Проверка, существует ли уже пользователь с таким email
+                const users = JSON.parse(localStorage.getItem('users'));
+                const userExists = users.some(user => user.email === email);
+                
+                if (userExists) {
+                    showError('register-email-error', 'Пользователь с таким email уже зарегистрирован');
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Регистрация пользователя
+                    const newUser = {
+                        name: name,
+                        email: email,
+                        password: password
+                    };
+                    
+                    users.push(newUser);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('currentUser', JSON.stringify(newUser));
+                    
+                    // Показать сообщение об успехе
+                    showSuccess('register-success', 'Регистрация прошла успешно! Добро пожаловать, ' + name + '!');
+                    
+                    // Очистить форму
+                    registerFormElement.reset();
+                    
+                    // Перенаправить на главную страницу через 2 секунды
+                    setTimeout(() => {
+                        window.location.href = 'index.html'; // Замените на вашу главную страницу
+                    }, 2000);
+                }
+            });
+
+            // Обработка входа
+            loginFormElement.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Сброс сообщений об ошибках
+                resetErrorMessages('login');
+                
+                // Получение значений полей
+                const email = document.getElementById('login-email').value.trim();
+                const password = document.getElementById('login-password').value;
+                
+                // Валидация
+                let isValid = true;
+                
+                if (!validateEmail(email)) {
+                    showError('login-email-error', 'Введите корректный email');
+                    isValid = false;
+                }
+                
+                if (password.length < 6) {
+                    showError('login-password-error', 'Пароль должен содержать минимум 6 символов');
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Проверка пользователя
+                    const users = JSON.parse(localStorage.getItem('users'));
+                    const user = users.find(user => user.email === email && user.password === password);
+                    
+                    if (user) {
+                        // Сохранить текущего пользователя
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        
+                        // Показать сообщение об успехе
+                        showSuccess('login-success', 'Вход выполнен успешно! Добро пожаловать, ' + user.name + '!');
+                        
+                        // Очистить форму
+                        loginFormElement.reset();
+                        
+                        // Перенаправить на главную страницу через 2 секунды
+                        setTimeout(() => {
+                            window.location.href = 'index.html'; // Замените на вашу главную страницу
+                        }, 2000);
+                    } else {
+                        showError('login-password-error', 'Неверный email или пароль');
+                    }
+                }
+            });
+
+            // Вспомогательные функции
+            function showError(elementId, message) {
+                const element = document.getElementById(elementId);
+                element.textContent = message;
+                element.style.display = 'block';
+            }
+
+            function showSuccess(elementId, message) {
+                const element = document.getElementById(elementId);
+                element.textContent = message;
+                element.style.display = 'block';
+            }
+
+            function resetErrorMessages(formType) {
+                const errorMessages = document.querySelectorAll(`#${formType}Form .error-message`);
+                errorMessages.forEach(msg => {
+                    msg.textContent = '';
+                    msg.style.display = 'none';
+                });
+                
+                // Скрыть сообщение об успехе
+                const successMessage = document.getElementById(`${formType}-success`);
+                if (successMessage) {
+                    successMessage.style.display = 'none';
+                }
+            }
+
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            // Проверить, есть ли уже авторизованный пользователь
+            if (localStorage.getItem('currentUser')) {
+                const user = JSON.parse(localStorage.getItem('currentUser'));
+                welcomeMessage.textContent = `С возвращением, ${user.name}! Войдите в свой аккаунт.`;
+            }
+        });
+    </script>
+</body>
+</html>

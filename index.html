@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мир животных - Билеты в зоопарк</title>
+    <link rel="manifest" href="/manifest.json">
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        /* Навигация */
+        nav {
+            background-color: #4CAF50;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Основной контейнер */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: calc(100vh - 140px);
+        }
+
+        /* Стили для страницы с животными (из предыдущего кода) */
+        .animals-page {
+            display: block;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .search-container {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        #search {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s;
+        }
+
+        #search:focus {
+            border: 2px solid #4CAF50;
+        }
+
+        .animals-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .animal-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .animal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .animal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .animal-info {
+            padding: 15px;
+        }
+
+        .animal-name {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .animal-species {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+
+        .animal-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .animal-details {
+            display: flex;
+            justify-content: space-between;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        /* Модальное окно (из предыдущего кода) */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 50px auto;
+            max-width: 800px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            position: relative;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            background-color: rgba(0,0,0,0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .close-btn:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-title {
+            font-size: 2em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-species {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .modal-description {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            font-size: 1.1em;
+        }
+
+        .modal-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail-item {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .detail-title {
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .detail-value {
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .modal-facts {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .facts-title {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .facts-list {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        .facts-list li {
+            margin-bottom: 8px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .animals-container {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 20px auto;
+            }
+
+            .modal-image {
+                height: 250px;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
+
+            .modal-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Стили для страницы покупки билетов */
+        .tickets-page {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .ticket-form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .ticket-form h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4CAF50;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+
+        .form-group {
+            flex: 1 0 200px;
+            padding: 0 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .ticket-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .ticket-type {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ticket-type:hover {
+            border-color: #4CAF50;
+        }
+
+        .ticket-type.selected {
+            border-color: #4CAF50;
+            background-color: #f0f9f0;
+        }
+
+        .ticket-type h3 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .ticket-price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .ticket-features {
+            list-style: none;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .ticket-features li {
+            margin-bottom: 5px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .ticket-features li:before {
+            content: "✓";
+            color: #4CAF50;
+            position: absolute;
+            left: 0;
+        }
+
+        .total-price {
+            text-align: right;
+            font-size: 1.3em;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+
+        .total-price span {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #3e8e41;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background-color: #f0f9f0;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .success-message h3 {
+            color: #4CAF50;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .success-message p {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .success-message .ticket-info {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .success-message .ticket-info p {
+            margin-bottom: 10px;
+        }
+
+        .success-message .ticket-info strong {
+            color: #333;
+        }
+
+        .print-btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .print-btn:hover {
+            background-color: #3e8e41;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                margin-top: 15px;
+            }
+
+            .nav-links li {
+                margin: 0 10px;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .form-group {
+                flex: 1 0 100%;
+            }
+
+            .ticket-types {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">Мир животных</a>
+            <ul class="nav-links">
+                <li><a href="#" class="active" id="animalsLink">Животные</a></li>
+                <li><a href="#" id="ticketsLink">Билеты в зоопарк</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Основной контейнер -->
+    <div class="main-container">
+        <!-- Страница с животными -->
+        <div class="animals-page" id="animalsPage">
+            <header>
+                <h1>Мир животных</h1>
+                <p>Исследуйте удивительный мир фауны</p>
+            </header>
+
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Поиск животных...">
+            </div>
+
+            <div class="animals-container" id="animalsContainer">
+                <!-- Карточки животных будут добавлены через JavaScript -->
+            </div>
+
+            <!-- Модальное окно -->
+            <div id="animalModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <img id="modalImage" class="modal-image" src="" alt="">
+                        <span class="close-btn">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <h2 id="modalTitle" class="modal-title"></h2>
+                        <span id="modalSpecies" class="modal-species"></span>
+                        <p id="modalDescription" class="modal-description"></p>
+                        
+                        <div class="modal-details">
+                            <div class="detail-item">
+                                <div class="detail-title">Научное название</div>
+                                <div id="modalScientificName" class="detail-value"></div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-title">Тип</div>
+                                <div id="modalType" class="detail-value"></div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-title">Среда обитания</div>
+                                <div id="modalHabitat" class="detail-value"></div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-title">Продолжительность жизни</div>
+                                <div id="modalLifespan" class="detail-value"></div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-title">Размер</div>
+                                <div id="modalSize" class="detail-value"></div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-title">Вес</div>
+                                <div id="modalWeight" class="detail-value"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="modal-facts">
+                            <h3 class="facts-title">Интересные факты</h3>
+                            <ul id="modalFacts" class="facts-list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница покупки билетов -->
+        <div class="tickets-page" id="ticketsPage">
+            <div class="ticket-form">
+                <h2>Купить билеты в зоопарк</h2>
+                
+                <form id="ticketForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">ФИО</label>
+                            <input type="text" id="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Телефон</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="visitDate">Дата посещения</label>
+                            <input type="date" id="visitDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="visitors">Количество посетителей</label>
+                        <input type="number" id="visitors" min="1" max="10" value="1" required>
+                    </div>
+                    
+                    <input type="hidden" id="ticketType" name="ticketType" value="">
+                    <input type="hidden" id="ticketPrice" name="ticketPrice" value="">
+                    
+                    <button type="submit" class="submit-btn">Купить билеты</button>
+                </form>
+                
+                <div class="success-message" id="successMessage">
+                    <h3>Покупка успешно оформлена!</h3>
+                    <p>Спасибо за покупку. Ваши билеты были отправлены на указанный email.</p>
+                    
+                    <div class="ticket-info">
+                        <p><strong>ФИО:</strong> <span id="successName"></span></p>
+                        <p><strong>Email:</strong> <span id="successEmail"></span></p>
+                        <p><strong>Телефон:</strong> <span id="successPhone"></span></p>
+                        <p><strong>Дата посещения:</strong> <span id="successDate"></span></p>
+                        <p><strong>Количество посетителей:</strong> <span id="successVisitors"></span></p>
+                        <p><strong>Сумма к оплате:</strong> <span id="successAmount"></span> ₽</p>
+                    </div>
+                    
+                    <button class="print-btn" onclick="window.print()">Распечатать билеты</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(() => console.log("Service Worker зарегистрирован!"))
+                .catch((error) => console.log("Ошибка регистрации:", error));
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const animalsLink = document.getElementById('animalsLink');
+            const ticketsLink = document.getElementById('ticketsLink');
+            const animalsPage = document.getElementById('animalsPage');
+            const ticketsPage = document.getElementById('ticketsPage');
+
+            animalsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                animalsPage.style.display = 'block';
+                ticketsPage.style.display = 'none';
+                animalsLink.classList.add('active');
+                ticketsLink.classList.remove('active');
+            });
+
+            ticketsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                animalsPage.style.display = 'none';
+                ticketsPage.style.display = 'block';
+                ticketsLink.classList.add('active');
+                animalsLink.classList.remove('active');
+            });
+
+            // Массив с данными о животных (из предыдущего кода)
+            const animals = [
+                {
+                    id: 1,
+                    name: 'Африканский лев',
+                    species: 'Кошачьи',
+                    scientificName: 'Panthera leo',
+                    image: 'https://avatars.mds.yandex.net/get-entity_search/2376568/1133162929/orig',
+                    description: 'Африканский лев — крупная хищная кошка, вторая по величине после тигра. Является социальным животным, живущим в прайдах. Самцы отличаются гривой, которая становится более пышной с возрастом.',
+                    age: '8-15 лет в дикой природе',
+                    habitat: 'Саванны, луга',
+                    type: 'Млекопитающее',
+                    lifespan: '10-14 лет (в природе), до 20 лет (в неволе)',
+                    size: 'Длина тела: 1.4-2.5 м, хвост: 67-100 см',
+                    weight: '120-250 кг (самцы), 120-182 кг (самки)',
+                    facts: [
+                        'Львы — единственные кошачьи, живущие группами (прайдами)',
+                        'Самцы защищают территорию, а самки охотятся',
+                        'Рёв льва слышен на расстоянии до 8 км',
+                        'Львы могут развивать скорость до 80 км/ч, но только на короткие дистанции',
+                        'Детёныши льва рождаются с пятнами, которые исчезают с возрастом'
+                    ]
+                },
+                {
+                    id: 2,
+                    name: 'Африканский слон',
+                    species: 'Хоботные',
+                    scientificName: 'Loxodonta africana',
+                    image: 'https://avatars.mds.yandex.net/get-entity_search/5655260/1130464362/orig',
+                    description: 'Африканский слон — самое крупное наземное животное. Обладает высоким интеллектом и сложной социальной структурой. Использует хобот для дыхания, питья, захвата пищи и общения.',
+                    age: '60-70 лет',
+                    habitat: 'Саванны, леса, пустыни',
+                    type: 'Млекопитающее',
+                    lifespan: '60-70 лет',
+                    size: 'Высота: 2.5-4 м, длина: 6-7.5 м',
+                    weight: '2,000-6,300 кг',
+                    facts: [
+                        'Самый крупный наземный млекопитающее',
+                        'Беременность длится 22 месяца — дольше, чем у любого другого животного',
+                        'Слоны могут узнавать себя в зеркале (признак самосознания)',
+                        'Используют инфразвук для общения на больших расстояниях',
+                        'Хобот содержит около 40,000 мышц'
+                    ]
+                },
+                {
+                    id: 3,
+                    name: 'Дельфин-афалина',
+                    species: 'Китообразные',
+                    scientificName: 'Tursiops truncatus',
+                    image: 'https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1ujk4W.img?w=1312&h=799&m=4&q=74',
+                    description: 'Дельфин-афалина — одно из самых умных морских животных. Обладает сложной системой эхолокации и социальным поведением. Часто взаимодействует с людьми в дикой природе и в неволе.',
+                    age: '20-50 лет',
+                    habitat: 'Океаны, моря',
+                    type: 'Млекопитающее',
+                    lifespan: '20-50 лет',
+                    size: '2-4 м в длину',
+                    weight: '150-650 кг',
+                    facts: [
+                        'Имеют самосознание и могут узнавать себя в зеркале',
+                        'Используют индивидуальные звуковые сигналы (имена)',
+                        'Могут задерживать дыхание на 7-15 минут',
+                        'Спят, отключая поочерёдно каждое полушарие мозга',
+                        'Обучаемы и могут понимать до 60 слов'
+                    ]
+                },
+                {
+                    id: 4,
+                    name: 'Беркут',
+                    species: 'Хищные птицы',
+                    scientificName: 'Aquila chrysaetos',
+                    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Maakotka_%28Aquila_chrysaetos%29_by_Jarkko_J%C3%A4rvinen_%28crop%29.jpg/1200px-Maakotka_%28Aquila_chrysaetos%29_by_Jarkko_J%C3%A4rvinen_%28crop%29.jpg',
+                    description: 'Беркут — одна из самых известных хищных птиц, символ силы и свободы. Обладает исключительным зрением, позволяющим видеть добычу с огромной высоты. Используется в соколиной охоте.',
+                    age: '15-30 лет',
+                    habitat: 'Горы, леса, открытые пространства',
+                    type: 'Птица',
+                    lifespan: '15-30 лет в дикой природе',
+                    size: 'Длина: 75-90 см, размах крыльев: 1.8-2.3 м',
+                    weight: '3-6.5 кг',
+                    facts: [
+                        'Могут видеть добычу на расстоянии до 3 км',
+                        'Развивают скорость до 320 км/ч при пикировании',
+                        'Строят огромные гнёзда до 2 м в диаметре',
+                        'Могут поднять добычу весом до 4 кг',
+                        'Образуют пары на всю жизнь'
+                    ]
+                },
+                {
+                    id: 5,
+                    name: 'Большая панда',
+                    species: 'Медвежьи',
+                    scientificName: 'Ailuropoda melanoleuca',
+                    image: 'https://i.pinimg.com/originals/c9/e5/69/c9e56922b0e07fc075b1e59c18ec0e90.jpg',
+                    description: 'Большая панда — редкое животное, символ Китая и охраны природы. Несмотря на принадлежность к хищникам, питается преимущественно бамбуком. Имеет уникальную черно-белую окраску.',
+                    age: '15-20 лет',
+                    habitat: 'Бамбуковые леса',
+                    type: 'Млекопитающее',
+                    lifespan: '20 лет в дикой природе, до 30 лет в неволе',
+                    size: '1.2-1.8 м в длину',
+                    weight: '70-125 кг',
+                    facts: [
+                        '99% рациона составляет бамбук',
+                        'Нуждаются в 12-16 кг бамбука ежедневно',
+                        'Имеют "шестой палец" — видоизменённую кость запястья для хватания',
+                        'Новорождённые детёныши весят всего 100-200 грамм',
+                        'В дикой природе осталось около 1,800 особей'
+                    ]
+                },
+                {
+                    id: 6,
+                    name: 'Нильский крокодил',
+                    species: 'Пресмыкающиеся',
+                    scientificName: 'Crocodylus niloticus',
+                    image: 'https://avatars.dzeninfra.ru/get-zen_doc/4078437/pub_6052275357266c7ccdbf7309_60522989a779365202cbba1d/scale_1200',
+                    description: 'Нильский крокодил — крупное хищное пресмыкающееся, одно из древнейших животных на Земле. Обладает мощными челюстями и отличной способностью к маскировке. Важный элемент экосистемы африканских водоёмов.',
+                    age: '70-100 лет',
+                    habitat: 'Реки, озёра, болота',
+                    type: 'Пресмыкающееся',
+                    lifespan: '70-100 лет',
+                    size: '3.5-5 м (иногда до 6 м)',
+                    weight: '225-750 кг',
+                    facts: [
+                        'Могут задерживать дыхание под водой до 2 часов',
+                        'Сила укуса достигает 2,267 кг (22,000 Н)',
+                        'Температура пола определяет пол детёнышей',
+                        'Могут бегать со скоростью до 14 км/ч на короткие дистанции',
+                        'Желудочный сок может растворять кости и копыта'
+                    ]
+                }
+            ];
+
+            // Функция для отображения карточек животных (из предыдущего кода)
+            function displayAnimals(animalsToDisplay) {
+                const container = document.getElementById('animalsContainer');
+                container.innerHTML = '';
+
+                if (animalsToDisplay.length === 0) {
+                    container.innerHTML = '<div class="no-results">Животные не найдены. Попробуйте изменить критерии поиска.</div>';
+                    return;
+                }
+
+                animalsToDisplay.forEach(animal => {
+                    const card = document.createElement('div');
+                    card.className = 'animal-card';
+                    card.innerHTML = `
+                        <img src="${animal.image}" alt="${animal.name}" class="animal-image">
+                        <div class="animal-info">
+                            <h3 class="animal-name">${animal.name}</h3>
+                            <span class="animal-species">${animal.species}</span>
+                            <p class="animal-description">${animal.description}</p>
+                            <div class="animal-details">
+                                <span>Возраст: ${animal.age}</span>
+                                <span>Среда: ${animal.habitat}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    card.addEventListener('click', () => openModal(animal));
+                    container.appendChild(card);
+                });
+            }
+
+            // Функция для поиска животных (из предыдущего кода)
+            function searchAnimals() {
+                const searchTerm = document.getElementById('search').value.toLowerCase();
+                const filteredAnimals = animals.filter(animal => 
+                    animal.name.toLowerCase().includes(searchTerm) || 
+                    animal.species.toLowerCase().includes(searchTerm) ||
+                    animal.description.toLowerCase().includes(searchTerm) ||
+                    animal.habitat.toLowerCase().includes(searchTerm)
+                );
+                displayAnimals(filteredAnimals);
+            }
+
+            // Функции для модального окна (из предыдущего кода)
+            function openModal(animal) {
+                const modal = document.getElementById('animalModal');
+                const modalImage = document.getElementById('modalImage');
+                const modalTitle = document.getElementById('modalTitle');
+                const modalSpecies = document.getElementById('modalSpecies');
+                const modalDescription = document.getElementById('modalDescription');
+                const modalScientificName = document.getElementById('modalScientificName');
+                const modalType = document.getElementById('modalType');
+                const modalHabitat = document.getElementById('modalHabitat');
+                const modalLifespan = document.getElementById('modalLifespan');
+                const modalSize = document.getElementById('modalSize');
+                const modalWeight = document.getElementById('modalWeight');
+                const modalFacts = document.getElementById('modalFacts');
+
+                modalImage.src = animal.image;
+                modalImage.alt = animal.name;
+                modalTitle.textContent = animal.name;
+                modalSpecies.textContent = animal.species;
+                modalDescription.textContent = animal.description;
+                modalScientificName.textContent = animal.scientificName;
+                modalType.textContent = animal.type;
+                modalHabitat.textContent = animal.habitat;
+                modalLifespan.textContent = animal.lifespan;
+                modalSize.textContent = animal.size;
+                modalWeight.textContent = animal.weight;
+
+                modalFacts.innerHTML = '';
+                animal.facts.forEach(fact => {
+                    const li = document.createElement('li');
+                    li.textContent = fact;
+                    modalFacts.appendChild(li);
+                });
+
+                modal.style.display = 'block';
+            }
+
+            function closeModal() {
+                document.getElementById('animalModal').style.display = 'none';
+            }
+
+            // Обработчики для модального окна (из предыдущего кода)
+            document.querySelector('.close-btn').addEventListener('click', closeModal);
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('animalModal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeModal();
+                }
+            });
+
+            // Инициализация страницы с животными
+            displayAnimals(animals);
+            document.getElementById('search').addEventListener('input', searchAnimals);
+
+            // Логика для страницы покупки билетов
+            const ticketTypes = document.querySelectorAll('.ticket-type');
+            const ticketTypeInput = document.getElementById('ticketType');
+            const ticketPriceInput = document.getElementById('ticketPrice');
+            const totalPriceElement = document.getElementById('totalPrice');
+            const visitorsInput = document.getElementById('visitors');
+            const ticketForm = document.getElementById('ticketForm');
+            const successMessage = document.getElementById('successMessage');
+
+            // Выбор типа билета
+            ticketTypes.forEach(type => {
+                type.addEventListener('click', function() {
+                    ticketTypes.forEach(t => t.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    const ticketType = this.getAttribute('data-type');
+                    const ticketPrice = this.getAttribute('data-price');
+                    
+                    ticketTypeInput.value = ticketType;
+                    ticketPriceInput.value = ticketPrice;
+                    
+                    calculateTotal();
+                });
+            });
+
+            visitorsInput.addEventListener('change', calculateTotal);
+
+            // Обработка формы
+            ticketForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Проверка выбранного типа билета
+                if (!ticketTypeInput.value) {
+                    alert('Пожалуйста, выберите тип билета');
+                    return;
+                }
+                
+                // Сохраняем данные формы
+                const formData = {
+                    name: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    date: document.getElementById('visitDate').value,
+                    visitors: visitorsInput.value,
+                    ticketType: ticketTypeInput.value,
+                    comments: document.getElementById('comments').value
+                };
+                
+                // Показываем сообщение об успехе
+                document.getElementById('successName').textContent = formData.name;
+                document.getElementById('successEmail').textContent = formData.email;
+                document.getElementById('successPhone').textContent = formData.phone;
+                document.getElementById('successDate').textContent = formData.date;
+                document.getElementById('successVisitors').textContent = formData.visitors;
+                document.getElementById('successAmount').textContent = amount;
+                
+                // Определяем название типа билета
+                let ticketTypeName;
+                switch(formData.ticketType) {
+                    case 'adult': ticketTypeName = 'Взрослый'; break;
+                    case 'child': ticketTypeName = 'Детский'; break;
+                    case 'family': ticketTypeName = 'Семейный'; break;
+                    case 'vip': ticketTypeName = 'VIP'; break;
+                    default: ticketTypeName = formData.ticketType;
+                }
+                document.getElementById('successTicketType').textContent = ticketTypeName;
+                
+                // Показываем сообщение об успехе и скрываем форму
+                ticketForm.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Прокручиваем к сообщению
+                successMessage.scrollIntoView({ behavior: 'smooth' });
+                
+                // Можно также сохранить данные в localStorage
+                const tickets = JSON.parse(localStorage.getItem('tickets') || []);
+                tickets.push({
+                    ...formData,
+                    amount: amount,
+                    purchaseDate: new Date().toISOString()
+                });
+                localStorage.setItem('tickets', JSON.stringify(tickets));
+            });
+        });
+    </script>
+</body>
+</html>
